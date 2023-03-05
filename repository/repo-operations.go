@@ -14,6 +14,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/openpgp"
 
 	"github.com/google/go-github/v43/github"
 
@@ -267,7 +268,6 @@ func updateRepo(config *config.GitXargsConfig,
 
 		// Track the fact that repo had no file changes post command execution
 		config.Stats.TrackSingle(stats.WorktreeStatusClean, remoteRepository)
-		return nil
 	}
 
 	// Commit any untracked files, modified or deleted files that resulted from script execution
@@ -327,8 +327,19 @@ func commitLocalChanges(status git.Status, config *config.GitXargsConfig, reposi
 	// With all our untracked files staged, we can now create a commit, passing the All
 	// option when configuring our commit option so that all modified and deleted files
 	// will have their changes committed
+	s := strings.NewReader(os.Getenv("GIT_PRIVATE_KEY"))
+	es, err := openpgp.ReadArmoredKeyRing(s)
+
+	if err != nil {
+		logger.Error(err)
+	}
+	signkey := es[0]
+	logger.Info(signkey)
+	logger.Info(signkey.PrimaryKey)
+	signkey.PrivateKey.Decrypt([]byte(os.Getenv("MY_PASS")))
 	commitOps := &git.CommitOptions{
-		All: true,
+		SignKey: signkey,
+		All:     true,
 	}
 
 	_, commitErr := worktree.Commit(config.CommitMessage, commitOps)
