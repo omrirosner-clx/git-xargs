@@ -1,3 +1,13 @@
+# New additions in this fork:
+
+### Signed commits:
+You can sign your commits by adding the following environmental variables
+1. GIT_PRIVATE_KEY - an armor formated opengpg key
+2. MY_PASS - pass phrase for the said key private key
+
+### Creating PRs even if no changes were committed
+
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/gruntwork-io/git-xargs)](https://goreportcard.com/report/github.com/gruntwork-io/git-xargs)
 [![gruntwork-io](https://circleci.com/gh/gruntwork-io/git-xargs.svg?style=svg)](https://circleci.com/gh/gruntwork-io/git-xargs)
 [![Homebrew](https://img.shields.io/badge/dynamic/json.svg?url=https://formulae.brew.sh/api/formula/git-xargs.json&query=$.versions.stable&label=homebrew)](https://formulae.brew.sh/formula/git-xargs)
